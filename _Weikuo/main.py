@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.cluster import KMeans
 
+_chars = '\%ˆ>|¡w?€=§[c¬•_¢(y∫i∆]zb∏p+8!:k{µ&7#g∞uh0¿∑¨j¶£df3®evl@16±√qs/.¥m,™}`‡t÷-\"$n°4∇\'~xo†9*×25;©¯r)<¤a^'
 def _generate_test(n_samples=1000, n_features=5, n_clusters=10, noise_level=1.2):
     np.random.seed(0)
     noise = np.random.randn(n_samples, n_features) * noise_level
@@ -28,13 +29,12 @@ def _check(labels, ground_truth):
                 _dict[label][ans] += 1
     return _dict
 
-chars = '\%ˆ>|¡w?€=§[c¬•_¢(y∫i∆]zb∏p+8!:k{µ&7#g∞uh0¿∑¨j¶£df3®evl@16±√qs/.¥m,™}`‡t÷-\"$n°4∇\'~xo†9*×25;©¯r)<¤a^'
 
 def _get_code_kmeans(data, n_clusters=26):
     data = np.array(data)
     kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(data)
     labels = kmeans.labels_
-    code = [chars[i] for i in labels]
+    code = [_chars[i] for i in labels]
     code = ''.join(code)
     return code
 
@@ -47,7 +47,7 @@ def test():
     ground_truth = np.array(ground_truth)
     kmeans = KMeans(n_clusters=10, random_state=0).fit(data)
     labels = kmeans.labels_
-    code = [chars[i] for i in labels]
+    code = [_chars[i] for i in labels]
     code = ''.join(code)
 
     mapping = _check(labels, ground_truth)
