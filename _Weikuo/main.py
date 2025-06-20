@@ -28,16 +28,41 @@ def _check(labels, ground_truth):
                 _dict[label][ans] += 1
     return _dict
 
+chars = '\%ˆ>|¡w?€=§[c¬•_¢(y∫i∆]zb∏p+8!:k{µ&7#g∞uh0¿∑¨j¶£df3®evl@16±√qs/.¥m,™}`‡t÷-\"$n°4∇\'~xo†9*×25;©¯r)<¤a^'
 
-if __name__ == '__main__':
+def _get_code_kmeans(data, n_clusters=26):
+    data = np.array(data)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(data)
+    labels = kmeans.labels_
+    code = [chars[i] for i in labels]
+    code = ''.join(code)
+    return code
+
+def get_code(data,*args,**kwargs):
+    return  _get_code_kmeans(data,*args,**kwargs)
+
+def test():
     data, ground_truth = _generate_test()
     data = np.array(data)
     ground_truth = np.array(ground_truth)
-    print(data.shape, ground_truth.shape)
     kmeans = KMeans(n_clusters=10, random_state=0).fit(data)
     labels = kmeans.labels_
-    
+    code = [chars[i] for i in labels]
+    code = ''.join(code)
 
     mapping = _check(labels, ground_truth)
     for i in range(10):
-        print(i, mapping[i])
+        print('mapping: ',i,'->', mapping[i])
+    
+    print("\nextracted code: ")
+    print("\033[32m", code, "\033[0m")
+
+if __name__ == '__main__':
+    # creates a list of 1d np arrays as list of embeddings, and a list of ints as ground truth
+    data, ground_truth = _generate_test(n_clusters=10)
+
+    # get extracted code
+    code = get_code(data, n_clusters=10)
+
+    print("\nextracted code: ")
+    print("\033[32m", code, "\033[0m")
