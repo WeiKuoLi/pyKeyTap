@@ -1,5 +1,4 @@
 import numpy as np
-from sklearn.cluster import KMeans
 
 _chars = '\%ˆ>|¡w?€=§[c¬•_¢(y∫i∆]zb∏p+8!:k{µ&7#g∞uh0¿∑¨j¶£df3®evl@16±√qs/.¥m,™}`‡t÷-\"$n°4∇\'~xo†9*×25;©¯r)<¤a^'
 def _generate_test(n_samples=1000, n_features=5, n_clusters=10, noise_level=1.2):
@@ -31,6 +30,7 @@ def _check(labels, ground_truth):
 
 
 def _get_code_kmeans(data, n_clusters=26):
+    from sklearn.cluster import KMeans
     data = np.array(data)
     kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(data)
     labels = kmeans.labels_
@@ -38,13 +38,25 @@ def _get_code_kmeans(data, n_clusters=26):
     code = ''.join(code)
     return code
 
+def _get_code_dbscan(data, eps=10, min_samples=5):
+    from sklearn.cluster import DBSCAN
+    data = np.array(data)
+    dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+    labels = dbscan.fit_predict(data)
+    code = [_chars[i] for i in labels]
+    code = ''.join(code)
+    return code
+
 def get_code(data,*args,**kwargs):
+    #return _get_code_dbscan(data,*args,**kwargs)
     return  _get_code_kmeans(data,*args,**kwargs)
 
 def test():
     data, ground_truth = _generate_test()
     data = np.array(data)
     ground_truth = np.array(ground_truth)
+    data = np.array(data)
+    from sklearn.cluster import KMeans
     kmeans = KMeans(n_clusters=10, random_state=0).fit(data)
     labels = kmeans.labels_
     code = [_chars[i] for i in labels]
